@@ -116,15 +116,15 @@
 
         system {
             // -----------------------------------------------------------------------------------------
-            // |      | BT1 | BT2 | BT3 | BT4 | BT5 |   |MUTE |VOL- |VOL+ |RGBTOG|RESET |BOOTLD|
+            // |      | BT1 | BT2 | BT3 | BT4 | BT5 |   |MUTE |VOL- |VOL+ |UNLOCK|RESET |BOOTLD|
             // |      |RGBBR+|RGBBR-|RGBHU+|RGBHU-|RGBSA+|PREV |NEXT |PLAY |RGBSA-|RGBEF+|RGBEF-|
-            // |      |     |     |     |     |BTCLR|     |     |     |     | EPTOG| EPOFF|
+            // |      |     |     |     |     |BTCLR|   |SOFTOFF|   |     |     | EPTOG| EPOFF|
             //                    |  -  | LYR |  -  |   |  -  |  -  |  -  |
 
             bindings = <
-&trans  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4    &kp C_MUTE  &kp C_VOL_DN  &kp C_VOL_UP  &trans  &sys_reset         &bootloader
-&trans  &trans        &trans        &trans        &trans        &trans          &kp C_PREV  &kp C_NEXT    &kp C_PP      &trans  &trans             &trans
-&trans  &trans        &trans        &trans        &trans        &bt BT_CLR      &trans      &trans        &trans        &trans  &ext_power EP_TOG  &ext_power EP_OFF
+&trans  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4    &kp C_MUTE  &kp C_VOL_DN  &kp C_VOL_UP  &studio_unlock  &sys_reset         &bootloader
+&trans  &trans        &trans        &trans        &trans        &trans          &kp C_PREV  &kp C_NEXT    &kp C_PP      &trans          &trans             &trans
+&trans  &trans        &trans        &trans        &trans        &bt BT_CLR      &soft_off   &trans        &trans        &trans          &ext_power EP_TOG  &ext_power EP_OFF
                                     &trans        &to 0         &trans          &trans      &trans        &trans
             >;
         };
