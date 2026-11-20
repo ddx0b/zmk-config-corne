@@ -23,6 +23,28 @@
             bindings = <&kp>, <&kp>;
         };
 
+        // Balanced layer-tap for Blender fn layer (instant hold when rolling into numpad/views)
+
+        blt: blender_layer_tap {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <150>;
+            flavor = "balanced";
+            bindings = <&mo>, <&kp>;
+        };
+
+        // Tap-preferred hold-tap for Blender views (tap = primary/numpad, hold = opposite/secondary)
+
+        bv: blender_view {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <150>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+
         // Layer cycling tap dance: 0→1→2→3→4→0
         /* layer_td: layer_tap_dance { */
         /*     compatible = "zmk,behavior-tap-dance"; */
@@ -33,37 +55,82 @@
         /* }; */
     };
 
-    // Configure faster mouse movement - no delay, quick acceleration
-
     combos {
-        /* compatible = "zmk,combos"; */
-        /* // Common DevOps shortcuts */
-        /* combo_esc { */
-        /*     timeout-ms = <50>; */
-        /*     key-positions = <0 1>;  // Q + W */
-        /*     bindings = <&kp ESCAPE>; */
-        /* }; */
-        /* combo_tab { */
-        /*     timeout-ms = <50>; */
-        /*     key-positions = <1 2>;  // W + E */
-        /*     bindings = <&kp TAB>; */
-        /* }; */
-        /* combo_enter { */
-        /*     timeout-ms = <50>; */
-        /*     key-positions = <8 9>;  // I + O */
-        /*     bindings = <&kp ENTER>; */
-        /* }; */
-        /* combo_backspace { */
-        /*     timeout-ms = <50>; */
-        /*     key-positions = <9 10>; // O + P */
-        /*     bindings = <&kp BACKSPACE>; */
-        /* }; */
-        /* // Spanish characters (useful for file paths/comments) */
-        /* combo_ntilde { */
-        /*     timeout-ms = <50>; */
-        /*     key-positions = <19 20>; // M + comma */
-        /*     bindings = <&kp RA(N)>; // ñ */
-        /* }; */
+        compatible = "zmk,combos";
+
+        // Toggle Blender mode one-handed from Default or Blender Base (ESC + Q)
+
+        combo_blender_toggle {
+            timeout-ms = <40>;
+            key-positions = <0 1>;
+            layers = <0 4>;
+            bindings = <&tog 4>;
+        };
+
+        // Blender-only left-hand combos (active only on Layer 4: blender_base)
+
+        combo_bl_vtx {
+            timeout-ms = <40>;
+            key-positions = <2 3>;  // W + E -> Vertex Select
+            layers = <4>;
+            bindings = <&kp N1>;
+        };
+
+        combo_bl_edge {
+            timeout-ms = <40>;
+            key-positions = <3 4>;  // E + R -> Edge Select
+            layers = <4>;
+            bindings = <&kp N2>;
+        };
+
+        combo_bl_face {
+            timeout-ms = <40>;
+            key-positions = <4 5>;  // R + T -> Face Select
+            layers = <4>;
+            bindings = <&kp N3>;
+        };
+
+        combo_bl_enter {
+            timeout-ms = <40>;
+            key-positions = <15 16>;  // D + F -> Confirm
+            layers = <4>;
+            bindings = <&kp ENTER>;
+        };
+
+        combo_bl_merge {
+            timeout-ms = <40>;
+            key-positions = <16 17>;  // F + G -> Merge / Move to Collection
+            layers = <4>;
+            bindings = <&kp M>;
+        };
+
+        combo_bl_undo {
+            timeout-ms = <40>;
+            key-positions = <25 26>;  // Z + X -> Undo
+            layers = <4>;
+            bindings = <&kp LC(Z)>;
+        };
+
+        combo_bl_redo {
+            timeout-ms = <40>;
+            key-positions = <26 27>;  // X + C -> Redo
+            layers = <4>;
+            bindings = <&kp LC(LS(Z))>;
+        };
+
+        combo_bl_y {
+            timeout-ms = <40>;
+            key-positions = <27 28>;  // C + V -> Y-Axis
+            layers = <4>;
+            bindings = <&kp Y>;
+        };
+
+        combo_bl_hide {
+            timeout-ms = <40>;
+            key-positions = <28 29>;  // V + B -> Hide
+            layers = <4>;
+            bindings = <&kp H>;
+        };
     };
 
     keymap {
@@ -93,7 +160,7 @@
 
             bindings = <
 &to 3   &kp EXCLAMATION       &kp AT_SIGN            &kp POUND       &kp DOLLAR       &kp LEFT_BRACKET     &kp MINUS  &kp N7        &kp N8        &kp N9        &kp DELETE  &kp BACKSPACE
-&trans  &kp PERCENT           &kp CARET              &kp AMPERSAND   &kp ASTERISK     &kp RIGHT_BRACKET    &kp EQUAL  &kp NUMBER_4  &kp N5        &kp NUMBER_6  &kp PIPE    &trans
+&tog 4  &kp PERCENT           &kp CARET              &kp AMPERSAND   &kp ASTERISK     &kp RIGHT_BRACKET    &kp EQUAL  &kp NUMBER_4  &kp N5        &kp NUMBER_6  &kp PIPE    &trans
 &trans  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp LEFT_BRACE  &kp RIGHT_BRACE  &kp BACKSLASH        &kp N0     &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &kp FSLH    &kp QUESTION
                                                      &kp LEFT_SHIFT  &trans           &trans               &trans     &trans        &kp RCTRL
             >;
@@ -126,6 +193,36 @@
 &trans  &trans        &trans        &trans        &trans        &trans          &kp C_PREV  &kp C_NEXT    &kp C_PP      &trans          &trans             &trans
 &trans  &trans        &trans        &trans        &trans        &bt BT_CLR      &soft_off   &trans        &trans        &trans          &ext_power EP_TOG  &ext_power EP_OFF
                                     &trans        &to 0         &trans          &trans      &trans        &trans
+            >;
+        };
+
+        blender_base {
+            // -----------------------------------------------------------------------------------------
+            // | ESC  |  Q  |  W  |  E  |  R  |  T  |   |  -  |  -  |  -  |  -  |  -  |  -  |
+            // | TAB  |  A  |  S  |  D  |  F  |  G  |   |  -  |  -  |  -  |  -  |  -  |  -  |
+            // | LCTL |  Z  |  X  |  C  |  V  |  B  |   |  -  |  -  |  -  |  -  |  -  |  -  |
+            //                    |LALT |LSHFT|L5/SP|   |  -  |  -  |  -  |
+
+            bindings = <
+&kp ESCAPE  &kp Q  &kp W  &kp E     &kp R      &kp T           &trans  &trans  &trans  &trans  &trans  &trans
+&kp TAB     &kp A  &kp S  &kp D     &kp F      &kp G           &trans  &trans  &trans  &trans  &trans  &trans
+&kp LCTRL   &kp Z  &kp X  &kp C     &kp V      &kp B           &trans  &trans  &trans  &trans  &trans  &trans
+                          &kp LALT  &kp LSHFT  &blt 5 SPACE    &trans  &trans  &trans
+            >;
+        };
+
+        blender_fn {
+            // -----------------------------------------------------------------------------------------
+            // |  `   | KP7/Btm | KP8   | KP9     | KP/ (Iso) | F3/F2  |   |  -  |  -  |  -  |  -  |  -  |  -  |
+            // |  N   | KP4     | KP5   | KP6     | KP./All   | F9/F12 |   |  -  |  -  |  -  |  -  |  -  |  -  |
+            // | LCTL | KP1/Bck | KP2   | KP3/Lft | KP0/Cam   | KP-/M  |   |  -  |  -  |  -  |  -  |  -  |  -  |
+            //                          | BSPC    | KP_ENTER  |  ---   |   |  -  |  -  |  -  |
+
+            bindings = <
+&kp GRAVE  &bv LC(KP_N7) KP_N7  &kp KP_N8  &kp KP_N9            &kp KP_SLASH             &bv F2 F3       &trans  &trans  &trans  &trans  &trans  &trans
+&kp N      &kp KP_N4            &kp KP_N5  &kp KP_N6            &bv HOME KP_DOT          &bv F12 F9      &trans  &trans  &trans  &trans  &trans  &trans
+&trans     &bv LC(KP_N1) KP_N1  &kp KP_N2  &bv LC(KP_N3) KP_N3  &bv LC(LA(KP_N0)) KP_N0  &bv M KP_MINUS  &trans  &trans  &trans  &trans  &trans  &trans
+                                           &kp BACKSPACE        &kp KP_ENTER             &trans          &trans  &trans  &trans
             >;
         };
     };
